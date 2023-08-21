@@ -16,6 +16,7 @@ import java.util.List;
 public class SpawnChecker {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onSpawn(LivingSpawnEvent.CheckSpawn event) {
+        if (DespawnTweaker.allowMobsSpawnedBySpawnersToDespawn.get()) return;
         Mob entity = event.getEntity();
         if (event.isSpawner() && !entity.level.isClientSide && !event.getResult().equals(Event.Result.DENY)) {
             ((IMob) entity).despawnTweaker$setSpawnStructures(entity.level.getChunkAt(entity.blockPosition()).getAllReferences().keySet());
@@ -25,6 +26,7 @@ public class SpawnChecker {
 
     @SubscribeEvent
     public static void onDespwan(LivingSpawnEvent.AllowDespawn event) {
+        if (DespawnTweaker.allowMobsSpawnedBySpawnersToDespawn.get()) return;
         Mob entity = event.getEntity();
         if (!entity.level.isClientSide && entity.getTags().contains(DespawnTweaker.MOD_ID + ".shouldNotDespawn")) {
             List<? extends String> structuresMods = DespawnTweaker.structuresMods.get();
