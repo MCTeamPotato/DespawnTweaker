@@ -40,10 +40,10 @@ public abstract class MobMixin extends LivingEntity implements IMob {
     }
 
     @Unique
-    protected static final EquipmentSlot[] despawnTweaker$slots = EquipmentSlot.values();
+    private static final EquipmentSlot[] despawnTweaker$slots = EquipmentSlot.values();
 
     @Unique
-    protected void despawnTweaker$dropEquipmentOnDespawn() {
+    private void despawnTweaker$dropEquipmentOnDespawn() {
         for (EquipmentSlot equipmentSlot : despawnTweaker$slots) {
             ItemStack itemStack = this.getItemBySlot(equipmentSlot);
             CompoundTag tag = itemStack.getTag();
