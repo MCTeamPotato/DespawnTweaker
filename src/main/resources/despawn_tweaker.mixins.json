@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.teampotato.despawn_tweaker.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "MobMixin"
+  ]
+}

@@ -1,0 +1,12 @@
+modLoader = "javafml"
+loaderVersion = "[36,)"
+license = "LGPL-v3"
+
+[[mods]]
+modId = "despawn_tweaker"
+version = "${version}"
+displayName = "DespawnTweaker"
+authors = "TeamPotato"
+description = '''
+A Minecraft mod.
+'''

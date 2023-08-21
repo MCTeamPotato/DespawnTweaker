@@ -1,0 +1,52 @@
+plugins {
+    id "dev.architectury.loom" version "1.1-SNAPSHOT"
+}
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
+
+loom {
+    silentMojangMappingsLicense()
+    forge {
+        mixinConfigs = [
+            "despawn_tweaker.mixins.json"
+        ]
+    }
+    mixin.defaultRefmapName.set("despawn_tweaker.refmap.json")
+}
+
+repositories {
+
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    forge "net.minecraftforge:forge:${project.forge_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release.set(8)
+}
+
+jar {
+    manifest {
+        attributes([
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : version,
+                "Implementation-Vendor"   : project.mod_author,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
