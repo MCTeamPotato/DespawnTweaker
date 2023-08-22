@@ -20,10 +20,11 @@ public class DespawnTweaker {
     public static ForgeConfigSpec configSpec;
 
     public static final ForgeConfigSpec.BooleanValue allowMobsSpawnedBySpawnersToDespawn;
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> structuresMods;
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> structures;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> structuresMods;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> structures;
+    public static final ForgeConfigSpec.BooleanValue enableLetMeDespawnOptimization;
 
-    public static ForgeConfigSpec.BooleanValue enableLetMeDespawnOptimization;
+    public static final ForgeConfigSpec.BooleanValue allowEquipmentDrops;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -34,6 +35,7 @@ public class DespawnTweaker {
         builder.pop();
         builder.push("Optimization");
         enableLetMeDespawnOptimization = builder.comment("DespawnTweaker does contain the optimization of Let Me Despawn mod and resolves its potenial performance issue on equipments drop of despawning.", "Turn this off to disable the optimization").define("enableLetMeDespawnOptimization", true);
+        allowEquipmentDrops = builder.comment("Turn this off to disable the equipments drop on mobs despawn").define("allowEquipmentDrops", true);
         builder.pop();
         configSpec = builder.build();
     }
