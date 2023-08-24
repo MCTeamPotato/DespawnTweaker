@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -56,15 +56,15 @@ public abstract class MobMixin extends LivingEntity implements IMob {
     }
 
     @Unique
-    private Set<Structure> despawnTweaker$spawnStructures = Sets.newHashSet();
+    private Set<ConfiguredStructureFeature<?, ?>> despawnTweaker$spawnStructures = Sets.newHashSet();
 
     @Override
-    public Set<Structure> despawnTweaker$getSpawnStructures() {
+    public Set<ConfiguredStructureFeature<?, ?>> despawnTweaker$getSpawnStructures() {
         return this.despawnTweaker$spawnStructures;
     }
 
     @Override
-    public void despawnTweaker$setSpawnStructures(Set<Structure> structureFeature) {
+    public void despawnTweaker$setSpawnStructures(Set<ConfiguredStructureFeature<?, ?>> structureFeature) {
         this.despawnTweaker$spawnStructures = structureFeature;
     }
 
