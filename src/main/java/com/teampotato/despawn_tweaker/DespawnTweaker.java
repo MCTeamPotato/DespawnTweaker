@@ -29,7 +29,7 @@ public class DespawnTweaker {
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         builder.push("DespawnTweaker");
-        allowMobsSpawnedBySpawnersToDespawn = builder.comment("Turn this off to allow the despawn of mobs spawned by spawners").define("allowMobsSpawnedBySpawnersToDespawn", false);
+        allowMobsSpawnedBySpawnersToDespawn = builder.comment("Turn this on to allow the despawn of mobs spawned by spawners").define("allowMobsSpawnedBySpawnersToDespawn", false);
         structuresMods = builder.comment("If you add modIDs to this list, only mobs in the structures of the mods will be affected by DespawnTweaker.").defineList("StructuresMods", Lists.newArrayList(), o -> o instanceof String);
         structures = builder.comment("If you add sturctures registry names to list, only mobs in the structures will be affected by DespawnTweaker.", "However, this can be combined with StructuresMods").defineList("Structures", Lists.newArrayList(), o -> o instanceof String);
         builder.pop();
