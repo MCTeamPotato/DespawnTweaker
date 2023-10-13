@@ -1,8 +1,8 @@
 package com.teampotato.despawn_tweaker.mixin;
 
-import com.google.common.collect.Sets;
 import com.teampotato.despawn_tweaker.DespawnTweaker;
 import com.teampotato.despawn_tweaker.api.IMob;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -58,8 +58,9 @@ public abstract class MobMixin extends LivingEntity implements IMob {
             }
         }
     }
+
     @Unique
-    private Set<StructureFeature<?>> despawnTweaker$spawnStructures = Sets.newHashSet();
+    private Set<StructureFeature<?>> despawnTweaker$spawnStructures = new ObjectOpenHashSet<>();
 
     @Override
     public Set<StructureFeature<?>> despawnTweaker$getSpawnStructures() {

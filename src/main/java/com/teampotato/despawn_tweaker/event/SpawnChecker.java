@@ -18,7 +18,7 @@ public class SpawnChecker {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onSpawn(LivingSpawnEvent.CheckSpawn event) {
         LivingEntity entity = event.getEntityLiving();
-        if (event.isSpawner() && !entity.level.isClientSide && !event.getResult().equals(Event.Result.DENY) && entity instanceof Mob) {
+        if (event.isSpawner() && !DespawnTweaker.allowMobsSpawnedBySpawnersToDespawn.get() && !entity.level.isClientSide && !event.getResult().equals(Event.Result.DENY) && entity instanceof Mob) {
             Mob mob = (Mob) entity;
             ((IMob)mob).despawnTweaker$setSpawnStructures(entity.level.getChunkAt(entity.blockPosition()).getAllReferences().keySet());
             mob.addTag(DespawnTweaker.MOD_ID + ".shouldNotDespawn");
