@@ -16,6 +16,7 @@ import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +36,7 @@ public class SpawnChecker {
 
     private static final Supplier<Set<String>> STRUCTURE_MODS = Suppliers.memoize(() -> new HashSet<>(DespawnTweaker.STRUCTURES_MODS.get()));
     private static final Supplier<Set<String>> STRUCTURES = Suppliers.memoize(() -> new HashSet<>(DespawnTweaker.STRUCTURES.get()));
+    private static final Supplier<Registry<Structure>> STRUCTURES_REGISTRY = Suppliers.memoize(() -> ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.STRUCTURE));
 
     @SubscribeEvent
     public static void onDespwan(MobSpawnEvent.AllowDespawn event) {
@@ -47,9 +49,8 @@ public class SpawnChecker {
         if (STRUCTURE_MODS.get().isEmpty() && STRUCTURES.get().isEmpty()) {
             event.setResult(Event.Result.DENY);
         } else {
-            Registry<Structure> structures = entity.level().registryAccess().registry(Registries.STRUCTURE).orElseThrow(RuntimeException::new);
             for (Structure structure : ((IMob) entity).despawnTweaker$getSpawnStructures()) {
-                ResourceLocation registryName = structures.getKey(structure);
+                ResourceLocation registryName = STRUCTURES_REGISTRY.get().getKey(structure);
                 if (registryName == null) continue;
                 boolean canDeny = STRUCTURE_MODS.get().contains(registryName.getNamespace()) || STRUCTURES.get().contains(registryName.toString());
                 if (!canDeny) continue;
