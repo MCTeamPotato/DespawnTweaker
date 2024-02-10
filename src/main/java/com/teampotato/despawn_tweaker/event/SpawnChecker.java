@@ -21,7 +21,7 @@ public class SpawnChecker {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onSpawn(LivingSpawnEvent.CheckSpawn event) {
         if (event.getResult().equals(Event.Result.DENY)) return;
-        if (DespawnTweaker.allowMobsSpawnedBySpawnersToDespawn.get()) return;
+        if (DespawnTweaker.ALLOW_MOBS_SPAWNED_BY_SPAWNERS_TO_DESPAWN.get()) return;
         LivingEntity entity = event.getEntityLiving();
         if (!event.isSpawner()) return;
         if (entity.level.isClientSide) return;
@@ -31,8 +31,8 @@ public class SpawnChecker {
         mob.addTag(DespawnTweaker.MOD_ID + ".shouldNotDespawn");
     }
 
-    private static final Supplier<Set<String>> STRUCTURE_MODS = Suppliers.memoize(() -> new HashSet<>(DespawnTweaker.structuresMods.get()));
-    private static final Supplier<Set<String>> STRUCTURES = Suppliers.memoize(() -> new HashSet<>(DespawnTweaker.structures.get()));
+    private static final Supplier<Set<String>> STRUCTURE_MODS = Suppliers.memoize(() -> new HashSet<>(DespawnTweaker.STRUCTURES_MODS.get()));
+    private static final Supplier<Set<String>> STRUCTURES = Suppliers.memoize(() -> new HashSet<>(DespawnTweaker.STRUCTURES.get()));
 
     @SubscribeEvent
     public static void onDespwan(LivingSpawnEvent.AllowDespawn event) {

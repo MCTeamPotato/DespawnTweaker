@@ -34,7 +34,7 @@ public abstract class MobMixin extends LivingEntity implements IMob {
 
     @Inject(method = "setItemSlotAndDropWhenKilled", at = @At("TAIL"))
     private void onSetItemSlotAndDropWhenKilled(EquipmentSlot arg, ItemStack itemStack, CallbackInfo ci) {
-        if (DespawnTweaker.enableLetMeDespawnOptimization.get()) {
+        if (DespawnTweaker.ENABLE_LET_ME_DESPAWN_OPTIMIZATION.get()) {
             EquipmentSlot equipmentSlot = Mob.getEquipmentSlotForItem(itemStack);
             ItemStack stack = this.getItemBySlot(equipmentSlot);
             stack.getOrCreateTag().putBoolean("DespawnTweakerPicked", true);
@@ -45,7 +45,7 @@ public abstract class MobMixin extends LivingEntity implements IMob {
 
     @Inject(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;remove()V", shift = At.Shift.AFTER))
     private void onDespawn(CallbackInfo ci) {
-        if (DespawnTweaker.enableLetMeDespawnOptimization.get() && this.getTags().contains("despawnTweaker.pickedItems")) {
+        if (DespawnTweaker.ENABLE_LET_ME_DESPAWN_OPTIMIZATION.get() && this.getTags().contains("despawnTweaker.pickedItems")) {
             this.despawnTweaker$dropEquipmentOnDespawn();
         }
     }
@@ -55,7 +55,7 @@ public abstract class MobMixin extends LivingEntity implements IMob {
 
     @Unique
     private void despawnTweaker$dropEquipmentOnDespawn() {
-        if (!DespawnTweaker.allowEquipmentDrops.get()) return;
+        if (!DespawnTweaker.ALLOW_EQUIPMENT_DROPS.get()) return;
         for (EquipmentSlot equipmentSlot : EQUIPMENT_SLOTS) {
             ItemStack itemStack = this.getItemBySlot(equipmentSlot);
             CompoundTag tag = itemStack.getTag();

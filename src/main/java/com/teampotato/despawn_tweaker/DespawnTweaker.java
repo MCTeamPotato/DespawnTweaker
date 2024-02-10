@@ -15,30 +15,28 @@ public class DespawnTweaker {
     public static final String MOD_ID = "despawn_tweaker";
 
     public DespawnTweaker() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, configSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
         MinecraftForge.EVENT_BUS.register(SpawnChecker.class);
     }
 
-    public static ForgeConfigSpec configSpec;
-
-    public static final ForgeConfigSpec.BooleanValue allowMobsSpawnedBySpawnersToDespawn;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> structuresMods;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> structures;
-    public static final ForgeConfigSpec.BooleanValue enableLetMeDespawnOptimization;
-
-    public static final ForgeConfigSpec.BooleanValue allowEquipmentDrops;
+    public static final ForgeConfigSpec COMMON_CONFIG;
+    public static final ForgeConfigSpec.BooleanValue ALLOW_MOBS_SPAWNED_BY_SPAWNERS_TO_DESPAWN;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> STRUCTURES_MODS;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> STRUCTURES;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_LET_ME_DESPAWN_OPTIMIZATION;
+    public static final ForgeConfigSpec.BooleanValue ALLOW_EQUIPMENT_DROPS;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         builder.push("DespawnTweaker");
-        allowMobsSpawnedBySpawnersToDespawn = builder.comment("Turn this off to disable the despawn of mobs spawned by spawners").define("allowMobsSpawnedBySpawnersToDespawn", true);
-        structuresMods = builder.comment("If you add modIDs to this list, only mobs in the structures of the mods will be affected by DespawnTweaker.").defineList("StructuresMods", new ObjectArrayList<>(), o -> o instanceof String);
-        structures = builder.comment("If you add sturctures registry names to list, only mobs in the structures will be affected by DespawnTweaker.", "This can be combined with StructuresMods").defineList("Structures", new ObjectArrayList<>(), o -> o instanceof String);
+        ALLOW_MOBS_SPAWNED_BY_SPAWNERS_TO_DESPAWN = builder.comment("Turn this off to disable the despawn of mobs spawned by spawners").define("allowMobsSpawnedBySpawnersToDespawn", true);
+        STRUCTURES_MODS = builder.comment("If you add modIDs to this list, only mobs in the structures of the mods will be affected by DespawnTweaker.").defineList("StructuresMods", new ObjectArrayList<>(), o -> o instanceof String);
+        STRUCTURES = builder.comment("If you add sturctures registry names to list, only mobs in the structures will be affected by DespawnTweaker.", "This can be combined with StructuresMods").defineList("Structures", new ObjectArrayList<>(), o -> o instanceof String);
         builder.pop();
         builder.push("Optimization");
-        enableLetMeDespawnOptimization = builder.comment("DespawnTweaker does contain the optimization of Let Me Despawn mod and resolves its potenial performance issue on equipments drop of despawning.", "Turn this off to disable the optimization").define("enableLetMeDespawnOptimization", true);
-        allowEquipmentDrops = builder.comment("Turn this off to disable the equipments drop on mobs despawn").define("allowEquipmentDrops", true);
+        ENABLE_LET_ME_DESPAWN_OPTIMIZATION = builder.comment("DespawnTweaker does contain the optimization of Let Me Despawn mod and resolves its potenial performance issue on equipments drop of despawning.", "Turn this off to disable the optimization").define("enableLetMeDespawnOptimization", true);
+        ALLOW_EQUIPMENT_DROPS = builder.comment("Turn this off to disable the equipments drop on mobs despawn").define("allowEquipmentDrops", true);
         builder.pop();
-        configSpec = builder.build();
+        COMMON_CONFIG = builder.build();
     }
 }
