@@ -9,9 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -87,15 +85,15 @@ public abstract class MobMixin extends LivingEntity implements IMob {
         if (this.getTags().contains("despawnTweaker.pickedItems")) this.despawnTweaker$removeTagOnDeath();
     }
 
-    @Unique private @Nullable Set<ConfiguredStructureFeature<?, ?>> despawnTweaker$spawnStructures = null;
+    @Unique private @Nullable Set<Structure> despawnTweaker$spawnStructures = null;
 
     @Override
-    public @NotNull Set<ConfiguredStructureFeature<?, ?>> despawnTweaker$getSpawnStructures() {
+    public @NotNull Set<Structure> despawnTweaker$getSpawnStructures() {
         return this.despawnTweaker$spawnStructures == null ? Collections.emptySet() : this.despawnTweaker$spawnStructures;
     }
 
     @Override
-    public void despawnTweaker$setSpawnStructures(Set<ConfiguredStructureFeature<?, ?>> structureFeature) {
+    public void despawnTweaker$setSpawnStructures(Set<Structure> structureFeature) {
         this.despawnTweaker$spawnStructures = structureFeature;
     }
 }
