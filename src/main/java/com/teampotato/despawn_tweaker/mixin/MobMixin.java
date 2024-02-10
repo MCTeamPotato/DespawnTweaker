@@ -9,6 +9,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +28,7 @@ import java.util.Set;
 public abstract class MobMixin extends LivingEntity implements IMob {
     @Shadow private boolean persistenceRequired;
 
-    @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot arg);
+    @Shadow public abstract @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot arg);
 
     protected MobMixin(EntityType<? extends LivingEntity> arg, Level arg2) {
         super(arg, arg2);
@@ -43,7 +45,7 @@ public abstract class MobMixin extends LivingEntity implements IMob {
         }
     }
 
-    @Inject(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;remove()V", shift = At.Shift.AFTER))
+    @Inject(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;discard()V", shift = At.Shift.AFTER))
     private void onDespawn(CallbackInfo ci) {
         if (DespawnTweaker.ENABLE_LET_ME_DESPAWN_OPTIMIZATION.get() && this.getTags().contains("despawnTweaker.pickedItems")) {
             this.despawnTweaker$dropEquipmentOnDespawn();
@@ -85,15 +87,15 @@ public abstract class MobMixin extends LivingEntity implements IMob {
         if (this.getTags().contains("despawnTweaker.pickedItems")) this.despawnTweaker$removeTagOnDeath();
     }
 
-    @Unique private @Nullable Set<StructureFeature<?>> despawnTweaker$spawnStructures = null;
+    @Unique private @Nullable Set<ConfiguredStructureFeature<?, ?>> despawnTweaker$spawnStructures = null;
 
     @Override
-    public @NotNull Set<StructureFeature<?>> despawnTweaker$getSpawnStructures() {
+    public @NotNull Set<ConfiguredStructureFeature<?, ?>> despawnTweaker$getSpawnStructures() {
         return this.despawnTweaker$spawnStructures == null ? Collections.emptySet() : this.despawnTweaker$spawnStructures;
     }
 
     @Override
-    public void despawnTweaker$setSpawnStructures(Set<StructureFeature<?>> structureFeature) {
+    public void despawnTweaker$setSpawnStructures(Set<ConfiguredStructureFeature<?, ?>> structureFeature) {
         this.despawnTweaker$spawnStructures = structureFeature;
     }
 }

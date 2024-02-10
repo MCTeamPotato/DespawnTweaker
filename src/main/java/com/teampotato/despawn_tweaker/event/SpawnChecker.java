@@ -7,8 +7,9 @@ import com.teampotato.despawn_tweaker.api.IMob;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -42,13 +43,13 @@ public class SpawnChecker {
         if (!entity.getTags().contains(DespawnTweaker.MOD_ID + ".shouldNotDespawn")) return;
         if (!(entity instanceof Mob)) return;
         Mob mob = (Mob) entity;
-        LevelChunk levelChunk = mob.level.getChunkAt(mob.blockPosition());
+        ChunkAccess levelChunk = mob.level.getChunk(mob.blockPosition().getX() >> 4, mob.blockPosition().getZ() >> 4, ChunkStatus.FULL, false);
         if (levelChunk == null) return;
         if (STRUCTURE_MODS.get().isEmpty() && STRUCTURES.get().isEmpty()) {
             event.setResult(Event.Result.DENY);
         } else {
-            for (StructureFeature<?> structureFeature : ((IMob)mob).despawnTweaker$getSpawnStructures()) {
-                ResourceLocation registryName = structureFeature.getRegistryName();
+            for (ConfiguredStructureFeature<?, ?> structureFeature : ((IMob)mob).despawnTweaker$getSpawnStructures()) {
+                ResourceLocation registryName = structureFeature.feature.getRegistryName();
                 if (registryName == null) continue;
                 boolean canDeny = STRUCTURE_MODS.get().contains(registryName.getNamespace()) || STRUCTURES.get().contains(registryName.toString());
                 if (!canDeny) continue;

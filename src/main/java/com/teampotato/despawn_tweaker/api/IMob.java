@@ -1,10 +1,10 @@
 package com.teampotato.despawn_tweaker.api;
 
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 
 import java.util.Set;
 
 public interface IMob {
-    Set<StructureFeature<?>> despawnTweaker$getSpawnStructures();
-    void despawnTweaker$setSpawnStructures(Set<StructureFeature<?>> structureFeature);
+    Set<ConfiguredStructureFeature<?, ?>> despawnTweaker$getSpawnStructures();
+    void despawnTweaker$setSpawnStructures(Set<ConfiguredStructureFeature<?, ?>> structureFeature);
 }
