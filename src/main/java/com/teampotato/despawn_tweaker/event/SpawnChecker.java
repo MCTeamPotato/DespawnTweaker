@@ -20,36 +20,40 @@ import java.util.Set;
 public class SpawnChecker {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onSpawn(LivingSpawnEvent.CheckSpawn event) {
+        if (event.getResult().equals(Event.Result.DENY)) return;
+        if (DespawnTweaker.allowMobsSpawnedBySpawnersToDespawn.get()) return;
         LivingEntity entity = event.getEntityLiving();
-        if (event.isSpawner() && !DespawnTweaker.allowMobsSpawnedBySpawnersToDespawn.get() && !entity.level.isClientSide && !event.getResult().equals(Event.Result.DENY) && entity instanceof Mob) {
-            Mob mob = (Mob) entity;
-            ((IMob)mob).despawnTweaker$setSpawnStructures(entity.level.getChunkAt(entity.blockPosition()).getAllReferences().keySet());
-            mob.addTag(DespawnTweaker.MOD_ID + ".shouldNotDespawn");
-        }
+        if (!event.isSpawner()) return;
+        if (entity.level.isClientSide) return;
+        if (!(entity instanceof Mob)) return;
+        Mob mob = (Mob) entity;
+        ((IMob)mob).despawnTweaker$setSpawnStructures(entity.level.getChunkAt(entity.blockPosition()).getAllReferences().keySet());
+        mob.addTag(DespawnTweaker.MOD_ID + ".shouldNotDespawn");
     }
 
-    private static final Supplier<Set<? extends String>> STRUCTURE_MODS = Suppliers.memoize(() -> new HashSet<String>(DespawnTweaker.structuresMods.get()));
-    private static final Supplier<Set<? extends String>> STRUCTURES = Suppliers.memoize(() -> new HashSet<String>(DespawnTweaker.structures.get()));
+    private static final Supplier<Set<String>> STRUCTURE_MODS = Suppliers.memoize(() -> new HashSet<>(DespawnTweaker.structuresMods.get()));
+    private static final Supplier<Set<String>> STRUCTURES = Suppliers.memoize(() -> new HashSet<>(DespawnTweaker.structures.get()));
 
     @SubscribeEvent
     public static void onDespwan(LivingSpawnEvent.AllowDespawn event) {
+        if (event.getResult().equals(Event.Result.DENY)) return;
         LivingEntity entity = event.getEntityLiving();
-        if (!entity.level.isClientSide && entity.getTags().contains(DespawnTweaker.MOD_ID + ".shouldNotDespawn") && entity instanceof Mob) {
-            Mob mob = (Mob) entity;
-            LevelChunk levelChunk = mob.level.getChunkAt(mob.blockPosition());
-            if (levelChunk != null) {
-                if (STRUCTURE_MODS.get().isEmpty() && STRUCTURES.get().isEmpty()) {
-                    event.setResult(Event.Result.DENY);
-                } else {
-                    for (StructureFeature<?> structureFeature : ((IMob)mob).despawnTweaker$getSpawnStructures()) {
-                        ResourceLocation registryName = structureFeature.getRegistryName();
-                        if (registryName == null) continue;
-                        if (STRUCTURE_MODS.get().contains(registryName.getNamespace()) || STRUCTURES.get().contains(registryName.toString())) {
-                            event.setResult(Event.Result.DENY);
-                            break;
-                        }
-                    }
-                }
+        if (entity.level.isClientSide) return;
+        if (!entity.getTags().contains(DespawnTweaker.MOD_ID + ".shouldNotDespawn")) return;
+        if (!(entity instanceof Mob)) return;
+        Mob mob = (Mob) entity;
+        LevelChunk levelChunk = mob.level.getChunkAt(mob.blockPosition());
+        if (levelChunk == null) return;
+        if (STRUCTURE_MODS.get().isEmpty() && STRUCTURES.get().isEmpty()) {
+            event.setResult(Event.Result.DENY);
+        } else {
+            for (StructureFeature<?> structureFeature : ((IMob)mob).despawnTweaker$getSpawnStructures()) {
+                ResourceLocation registryName = structureFeature.getRegistryName();
+                if (registryName == null) continue;
+                boolean canDeny = STRUCTURE_MODS.get().contains(registryName.getNamespace()) || STRUCTURES.get().contains(registryName.toString());
+                if (!canDeny) continue;
+                event.setResult(Event.Result.DENY);
+                break;
             }
         }
     }
